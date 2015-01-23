@@ -79,6 +79,8 @@ Access the dashboard: <a href="https://dashboard.katalysator.io">https://dashboa
 <li><p>The SDK requires the key <code class="prettyprint">NSLocationAlwaysUsageDescription</code> to be present in the <code class="prettyprint">.plist</code> file in order to register for location and iBeacon monitoring.
 iBeacon monitoring does not require any additional permissions but Bluetooth must be active.</p></li>
 <li><p>The SDK works on iOS 7.0 and up.</p></li>
+<li><p>Linker flags <code class="prettyprint">-ObjC</code> and <code class="prettyprint">-all_load</code></p></li>
+<li><p>Several iOS frameworks <code class="prettyprint">CoreLocation.framework</code>, <code class="prettyprint">CoreBluetooth.framework</code>, <code class="prettyprint">CoreTelephony.framework</code>, <code class="prettyprint">AdSupport.framework</code>, <code class="prettyprint">MediaPlayer.framework</code></p></li>
 </ul>
 <h2 id='full-sample'>Full Sample</h2>
 <blockquote>
