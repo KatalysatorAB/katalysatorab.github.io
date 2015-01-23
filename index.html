@@ -1,0 +1,329 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Glimr Docs</title>
+
+    <link href="stylesheets/screen.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" type="text/css" media="print" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+      <script src="javascripts/all.js" type="text/javascript"></script>
+
+      <script>
+        $(function() {
+          setupLanguages(["objc"]);
+        });
+      </script>
+  </head>
+
+  <body class="index">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" />
+      </span>
+    </a>
+    <div class="tocify-wrapper">
+      <img src="images/logo.png" />
+        <div class="lang-selector">
+              <a href="#" data-language-name="objc">objc</a>
+        </div>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc">
+      </div>
+        <ul class="toc-footer">
+            <li><a href='http://www.glimr.io/contact.html'>Get in touch with Glimr</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <h1 id='getting-started'>Getting started</h1>
+<p>The following chapters explain most parts of the components that drive the Glimr platform. Feel free to contact us if anything is unclear.</p>
+
+<p>This documentation touches briefly our customer dashboard and covers the integration of the iOS SDK into your own application.</p>
+
+<p>The mobile SDK basically allows other applications to perform those three tasks:</p>
+
+<ul>
+<li><p>Trigger events when entering / exiting Geo-fences or iBeacon regions</p></li>
+<li><p>Present custom views and track actions when entering / exiting Geo-fences or iBeacon regions</p></li>
+<li><p>Collect additional audience data of a device and receive device audience tags</p></li>
+</ul>
+
+<p>The SDK integration itself is very slim since almost everything is configured on the dashboard for dynamic customisation.
+That means that account to access our dashboard is required in order to get started.</p>
+
+<p><aside class="notice">
+Please contact <a href="project@glimr.io">project@glimr.io</a> if you haven&rsquo;t access  to our platform yet.
+</aside></p>
+<h1 id='dashboard'>Dashboard</h1>
+<blockquote>
+<p>After logging in you can find your API token under &ldquo;SDK Download&rdquo;</p>
+</blockquote>
+
+<p>The dashboard is the heart of our service. Here customers can customise the behaviour of the SDK and extract the data they are looking for. This configuration can be changed at any time.
+It also supports multiple app bundles, multiple campaigns simultaniously, GPS based regions and iBeacon regions, creating audiences.
+There is a lot to explore, when we set up new accounts, they are usually preconfigured to get started as quick as possible. If you have more questions about specific functionality of our dashboard, get in touch.</p>
+
+<p><aside class="notice">
+Access the dashboard: <a href="https://dashboard.katalysator.io">https://dashboard.katalysator.io</a>
+</aside></p>
+<h1 id='sdk-integration'>SDK integration</h1><h2 id='requirements'>Requirements</h2>
+<ul>
+<li><p>The SDK requires the key <code class="prettyprint">NSLocationAlwaysUsageDescription</code> to be present in the <code class="prettyprint">.plist</code> file in order to register for location and iBeacon monitoring.
+iBeacon monitoring does not require any additional permissions but Bluetooth must be active.</p></li>
+<li><p>The SDK works on iOS 7.0 and up.</p></li>
+</ul>
+<h2 id='full-sample'>Full Sample</h2>
+<blockquote>
+<p>First setup a <code class="prettyprint">KATConfiguration</code> object</p>
+</blockquote>
+<pre><code class="highlight objective_c">
+<span class="n">KATConfiguration</span> <span class="o">*</span><span class="n">config</span> <span class="o">=</span> <span class="p">[[</span><span class="n">KATConfiguration</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+<span class="n">config</span><span class="p">.</span><span class="n">apiToken</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSUUID</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithUUIDString</span><span class="p">:</span><span class="s">@"YOUR_API_TOKEN"</span><span class="p">];</span>
+<span class="n">config</span><span class="p">.</span><span class="n">handlerFilter</span> <span class="o">=</span> <span class="n">KATHandlerFilterData</span><span class="p">;</span>
+<span class="n">config</span><span class="p">.</span><span class="n">allowCircularRegionMonitoring</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="n">config</span><span class="p">.</span><span class="n">allowAdvertisingIdentifierAccess</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="n">config</span><span class="p">.</span><span class="n">suppressBluetoothAccuracyAlert</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="n">config</span><span class="p">.</span><span class="n">askForNotificationPermission</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+</code></pre>
+
+<blockquote>
+<p>For region monitoring use the <code class="prettyprint">KATBeaconManager</code></p>
+</blockquote>
+<pre><code class="highlight objective_c">
+<span class="n">KATBeaconManager</span> <span class="o">*</span><span class="n">beaconManager</span> <span class="o">=</span> <span class="p">[[</span><span class="n">KATBeaconManager</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithConfiguration</span><span class="p">:</span><span class="n">config</span><span class="p">];</span>
+<span class="p">[</span><span class="n">beaconManager</span> <span class="nf">startWithHandler</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">id</span> <span class="n">result</span><span class="p">,</span> <span class="n">BOOL</span> <span class="n">cached</span><span class="p">,</span> <span class="n">NSDate</span> <span class="o">*</span><span class="n">date</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"EVENT %@ %@"</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span><span class="err">;</span>
+<span class="p">}];</span>
+</code></pre>
+
+<blockquote>
+<p>To receive audience tags use the <code class="prettyprint">KATAudienceManager</code></p>
+</blockquote>
+<pre><code class="highlight objective_c">
+<span class="n">KATAudienceManager</span> <span class="o">*</span><span class="n">audienceManager</span> <span class="o">=</span> <span class="p">[[</span><span class="n">KATAudienceManager</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithApiToken</span><span class="p">:</span><span class="n">config</span><span class="p">.</span><span class="n">apiToken</span><span class="p">];</span>
+<span class="p">[</span><span class="n">audienceManager</span> <span class="nf">audiencesWithCompletion</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">audiences</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"AUDIENCES %@"</span><span class="p">,</span> <span class="n">audiences</span><span class="p">)</span><span class="err">;</span>
+<span class="p">}];</span>
+</code></pre>
+
+<p>You have two options to integrate the iOS SDK. You can find the latest release on <a href="https://github.com/KatalysatorAB/BeaconSDK-iOS/releases">Github</a> or you use CocoaPods <code class="prettyprint">pod &quot;KatalysatorSDK&quot;</code> to add the latest stable version to your app.</p>
+
+<p>You can find a complete code example to the right. You find a more detailed version below.</p>
+
+<p>Basically in order to listen to geo-fences and iBeacons you create a configuration object that you pass into the KATBeaconManager.
+The managers provides the events in a block callback when calling <code class="prettyprint">startWithHandler</code>.</p>
+
+<p>To receive audience tags from the dashboard, all you need is to create an instance of the <code class="prettyprint">KATAudienceManager</code> object with your API token and call <code class="prettyprint">audiencesWithCompletion</code>.</p>
+
+<p><aside class="notice">
+You must replace <code class="prettyprint">YOUR_API_TOKEN</code> with your API key.
+</aside></p>
+<h1 id='region-monitoring'>Region monitoring</h1><h2 id='configuration'>Configuration</h2>
+<blockquote>
+<p>Sample for a recommended <code class="prettyprint">KATConfiguration</code> object</p>
+</blockquote>
+<pre><code class="highlight objective_c">
+<span class="n">KATConfiguration</span> <span class="o">*</span><span class="n">config</span> <span class="o">=</span> <span class="p">[[</span><span class="n">KATConfiguration</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+<span class="n">config</span><span class="p">.</span><span class="n">apiToken</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSUUID</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithUUIDString</span><span class="p">:</span><span class="s">@"YOUR_API_TOKEN"</span><span class="p">];</span>
+<span class="n">config</span><span class="p">.</span><span class="n">handlerFilter</span> <span class="o">=</span> <span class="n">KATHandlerFilterData</span><span class="p">;</span>
+<span class="n">config</span><span class="p">.</span><span class="n">allowCircularRegionMonitoring</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="n">config</span><span class="p">.</span><span class="n">allowAdvertisingIdentifierAccess</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="n">config</span><span class="p">.</span><span class="n">suppressBluetoothAccuracyAlert</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="n">config</span><span class="p">.</span><span class="n">askForNotificationPermission</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+</code></pre>
+
+<p>The <code class="prettyprint">KATConfiguration</code> object is necessary to initialise the region monitoring later on.</p>
+
+<p>The options are:</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>apiToken</td>
+<td>nil</td>
+<td>Your API token, required for any dashboard interaction</td>
+</tr>
+<tr>
+<td>regionToken</td>
+<td>nil</td>
+<td>Setting the regionToken to a UUID hardcodes the regions the app listens to. This is only recommended for development purpose</td>
+</tr>
+<tr>
+<td>handlerFilter</td>
+<td>KATHandlerFilterAll</td>
+<td>Defines what type of information the block callback can receive (KATHandlerFilterAll, KATHandlerFilterAlert, KATHandlerFilterData)</td>
+</tr>
+<tr>
+<td>suppressBluetoothAccuracyAlert</td>
+<td>NO</td>
+<td>This option will try it&rsquo;s best to skip the bluetooth accuracy alert that iOS pops up by default</td>
+</tr>
+<tr>
+<td>allowCircularRegionMonitoring</td>
+<td>NO</td>
+<td>This option allows geo-fences in addition to iBeacon region monitoring</td>
+</tr>
+<tr>
+<td>allowAdvertisingIdentifierAccess</td>
+<td>NO</td>
+<td>If set the dashboard will receive information about the mobile advertisement identifier of the device</td>
+</tr>
+<tr>
+<td>askForNotificationPermission</td>
+<td>NO</td>
+<td>If set the SDK will request <code class="prettyprint">requestAlwaysAuthorization</code> location permission. Please note that the <code class="prettyprint">NSLocationAlwaysUsageDescription</code> key must be present in the <code class="prettyprint">plist</code> of the app</td>
+</tr>
+</tbody></table>
+
+<p>Calling the provided method signature <code class="prettyprint">- (NSArray *)configUpdate:(BOOL)force coordinate:(CLLocationCoordinate2D)coordinate completion:(KATUpdateConfigHandler)completion;</code> manually is not recommended as it will be called anyway when initialising the <code class="prettyprint">KATBeaconManager</code>.
+This method will update the local configuration.</p>
+<h2 id='geo-fences-and-ibeacons'>Geo-fences and iBeacons</h2>
+<p>To initialise region monitoring all you need to do is to implement the sample code to the right.
+Make sure this code is executed every time the app is started.
+Calling it every time the app comes to foreground is fine as well.</p>
+
+<p><aside class="notice">
+You must replace <code class="prettyprint">YOUR_API_TOKEN</code> with your API key.
+</aside></p>
+
+<blockquote>
+<p>Full example to do region monitoring for iBeacons and geo-fences</p>
+</blockquote>
+<pre><code class="highlight objective_c">
+<span class="n">KATConfiguration</span> <span class="o">*</span><span class="n">config</span> <span class="o">=</span> <span class="p">[[</span><span class="n">KATConfiguration</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">init</span><span class="p">];</span>
+<span class="n">config</span><span class="p">.</span><span class="n">apiToken</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSUUID</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithUUIDString</span><span class="p">:</span><span class="s">@"YOUR_API_TOKEN"</span><span class="p">];</span>
+<span class="n">config</span><span class="p">.</span><span class="n">handlerFilter</span> <span class="o">=</span> <span class="n">KATHandlerFilterData</span><span class="p">;</span>
+<span class="n">config</span><span class="p">.</span><span class="n">allowCircularRegionMonitoring</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="n">config</span><span class="p">.</span><span class="n">allowAdvertisingIdentifierAccess</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="n">config</span><span class="p">.</span><span class="n">suppressBluetoothAccuracyAlert</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+<span class="n">config</span><span class="p">.</span><span class="n">askForNotificationPermission</span> <span class="o">=</span> <span class="nb">YES</span><span class="p">;</span>
+
+<span class="n">KATBeaconManager</span> <span class="o">*</span><span class="n">beaconManager</span> <span class="o">=</span> <span class="p">[[</span><span class="n">KATBeaconManager</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithConfiguration</span><span class="p">:</span><span class="n">config</span><span class="p">];</span>
+<span class="p">[</span><span class="n">beaconManager</span> <span class="nf">startWithHandler</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">id</span> <span class="n">result</span><span class="p">,</span> <span class="n">BOOL</span> <span class="n">cached</span><span class="p">,</span> <span class="n">NSDate</span> <span class="o">*</span><span class="n">date</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"EVENT %@ %@"</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span><span class="err">;</span>
+<span class="p">}];</span>
+</code></pre>
+
+<p>The <code class="prettyprint">KATAdvertHandler</code> block of <code class="prettyprint">startWithHandler</code>  brings along the following parameters:</p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>result</td>
+<td>nil</td>
+<td>Depending on the <code class="prettyprint">handlerFilter</code> this might be a <code class="prettyprint">NSDictionary</code> or a <code class="prettyprint">UILocalNotification</code> object</td>
+</tr>
+<tr>
+<td>cached</td>
+<td>NO</td>
+<td>If set you know the user received this event while being in background or &ldquo;closed down&rdquo;</td>
+</tr>
+<tr>
+<td>date</td>
+<td>nil</td>
+<td>The date the event was triggered</td>
+</tr>
+<tr>
+<td>error</td>
+<td>nil</td>
+<td>A possible error that occurred when communicating with Glimr servers</td>
+</tr>
+</tbody></table>
+
+<p>Based on the dashboard configuration the callback will receive the response for a configured campaign.
+The app can use this information further and present views, track events or perform other actions.</p>
+<h2 id='debugging'>Debugging</h2>
+<p>The SDK provides a few tweaks to help developer debug the SDK integration.</p>
+
+<p><code class="prettyprint">triggerWithHandler</code> will perform a callback immediately before contacting the Glimr servers showing the payload that will be send to the dashboard.</p>
+
+<blockquote>
+<p>Sample <code class="prettyprint">triggerWithHandler</code></p>
+</blockquote>
+<pre><code class="highlight objective_c"><span class="p">[</span><span class="n">beaconManager</span> <span class="nf">triggerWithHandler</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">requestDict</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"TRIGGER %@"</span><span class="p">,</span> <span class="n">requestDict</span><span class="p">)</span><span class="err">;</span>
+<span class="p">}];</span>
+
+</code></pre>
+
+<blockquote>
+<p>Sample <code class="prettyprint">debugWithHandler</code></p>
+</blockquote>
+
+<p><code class="prettyprint">debugWithHandler</code> allows logging of different events that happen under the hood of the SDK.</p>
+<pre><code class="highlight objective_c"><span class="p">[</span><span class="n">beaconManager</span> <span class="nf">debugWithHandler</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">id</span> <span class="n">result</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"DEBUG %@"</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span><span class="err">;</span>
+<span class="p">}];</span>
+</code></pre>
+
+<p>Thos methods are completely optional and usually for debugging purposes only.</p>
+<h1 id='audiences'>Audiences</h1>
+<p>Another functionality of the SDK is to collect additional data and read the assign audience tags defined on the Glimr dashboard.
+The dashboard allows to create audiences based on offline behaviour of a device gathered from from iBeacon regions and geo-fences.
+Applications can use the result of the mined data and use it i.e. to feed ad systems with additional keywords about the deivce/user.</p>
+<h2 id='collect-data'>Collect data</h2>
+<p>To collect additional data, use the example to the right. The parameter needs to needs to be of type <code class="prettyprint">NSDictionary</code> and all key-value combinations must but JSON serializable.</p>
+
+<blockquote>
+<p>Full example for collecting more information</p>
+</blockquote>
+<pre><code class="highlight objective_c"><span class="n">KATAudienceManager</span> <span class="o">*</span><span class="n">audienceManager</span> <span class="o">=</span> <span class="p">[[</span><span class="n">KATAudienceManager</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithApiToken</span><span class="p">:</span><span class="s">@"YOUR_API_TOKEN"</span><span class="p">];</span>
+<span class="p">[</span><span class="n">audienceManager</span> <span class="nf">collect</span><span class="p">:</span><span class="err">@</span><span class="p">{</span> <span class="s">@"userId"</span> <span class="o">:</span> <span class="s">@"sven@glimr.io"</span> <span class="p">}];</span>
+</code></pre>
+
+<p><aside class="notice">
+You must replace <code class="prettyprint">YOUR_API_TOKEN</code> with your API key.
+</aside></p>
+<h2 id='get-device-tags'>Get device tags</h2>
+<p>The SDK allows developers to receive the tags assigned to a device. The example shows a full example of that.
+The completion block contains a <code class="prettyprint">NSDictionary</code> wit the key <code class="prettyprint">tags</code>, which represents an array of assigned tags for the device.
+Please note that audiences are generated every ten minutes at the moment. Depending on the time passed by the call will not always reach out to the servers but instead return a local version of the result.
+In general this function should be called whenever the app comes to foreground in order to receive the latest tags for a device.</p>
+
+<blockquote>
+<p>Full example for reading tags assigned to the current device</p>
+</blockquote>
+<pre><code class="highlight objective_c"><span class="n">KATAudienceManager</span> <span class="o">*</span><span class="n">audienceManager</span> <span class="o">=</span> <span class="p">[[</span><span class="n">KATAudienceManager</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithApiToken</span><span class="p">:</span><span class="s">@"YOUR_API_TOKEN"</span><span class="p">];</span>
+<span class="p">[</span><span class="n">audienceManager</span> <span class="nf">audiencesWithCompletion</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">NSDictionary</span> <span class="o">*</span><span class="n">audiences</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">NSLog</span><span class="p">(</span><span class="s">@"AUDIENCES %@"</span><span class="p">,</span> <span class="n">audiences</span><span class="p">)</span><span class="err">;</span>
+<span class="p">}];</span>
+
+</code></pre>
+
+<p><aside class="notice">
+You must replace <code class="prettyprint">YOUR_API_TOKEN</code> with your API key.
+</aside></p>
+
+      </div>
+      <div class="dark-box">
+          <div class="lang-selector">
+                <a href="#" data-language-name="objc">objc</a>
+          </div>
+      </div>
+    </div>
+  </body>
+</html>
