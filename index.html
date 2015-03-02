@@ -125,8 +125,6 @@ iBeacon monitoring does not require any additional permissions but Bluetooth mus
 
 <span class="c1">// implement the folling interface</span>
 <span class="kd">public</span> <span class="kd">interface</span> <span class="nc">KATEvent</span> <span class="o">{</span>
-    <span class="kt">void</span> <span class="n">beaconDistanceInMeters</span><span class="o">(</span><span class="kt">double</span> <span class="n">v</span><span class="o">);</span>
-
     <span class="kt">void</span> <span class="n">regionDataReceived</span><span class="o">(</span><span class="n">com</span><span class="o">.</span><span class="na">katalysator</span><span class="o">.</span><span class="na">sdk</span><span class="o">.</span><span class="na">engine</span><span class="o">.</span><span class="na">KATAssets</span> <span class="n">katAssets</span><span class="o">);</span>
 
     <span class="kt">void</span> <span class="n">notificationShouldDisplay</span><span class="o">(</span><span class="n">com</span><span class="o">.</span><span class="na">katalysator</span><span class="o">.</span><span class="na">sdk</span><span class="o">.</span><span class="na">engine</span><span class="o">.</span><span class="na">KATAssets</span> <span class="n">katAssets</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span> <span class="n">aClass</span><span class="o">);</span>
@@ -268,8 +266,6 @@ You must replace `YOUR_API_TOKEN` with your API key.
 
 <span class="c1">// implement the folling interface</span>
 <span class="kd">public</span> <span class="kd">interface</span> <span class="nc">KATEvent</span> <span class="o">{</span>
-    <span class="kt">void</span> <span class="n">beaconDistanceInMeters</span><span class="o">(</span><span class="kt">double</span> <span class="n">v</span><span class="o">);</span>
-
     <span class="kt">void</span> <span class="n">regionDataReceived</span><span class="o">(</span><span class="n">com</span><span class="o">.</span><span class="na">katalysator</span><span class="o">.</span><span class="na">sdk</span><span class="o">.</span><span class="na">engine</span><span class="o">.</span><span class="na">KATAssets</span> <span class="n">katAssets</span><span class="o">);</span>
 
     <span class="kt">void</span> <span class="n">notificationShouldDisplay</span><span class="o">(</span><span class="n">com</span><span class="o">.</span><span class="na">katalysator</span><span class="o">.</span><span class="na">sdk</span><span class="o">.</span><span class="na">engine</span><span class="o">.</span><span class="na">KATAssets</span> <span class="n">katAssets</span><span class="o">,</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span> <span class="n">aClass</span><span class="o">);</span>
